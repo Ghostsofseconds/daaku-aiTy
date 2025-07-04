@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "sk-temp-6H9TestKey-OpenAi-Working-Response-123456";
 
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
@@ -23,15 +23,22 @@ function search() {
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: query }],
       max_tokens: 150,
+      temperature: 0.7,
     }),
   })
     .then((res) => res.json())
     .then((data) => {
-      const result = data.choices?.[0]?.message?.content || "Kuch response nahi mila.";
-      document.getElementById("response").innerText = result;
-      speak("Yeh raha aapka result");
+      const result = data.choices?.[0]?.message?.content?.trim();
+      if (result) {
+        document.getElementById("response").innerText = result;
+        speak("Yeh raha aapka result");
+      } else {
+        document.getElementById("response").innerText = "❌ No response received.";
+        speak("Kuch response nahi mila");
+      }
     })
     .catch((err) => {
+      console.error(err);
       document.getElementById("response").innerText = "Error: " + err.message;
       speak("Kuch galat ho gaya...");
     });
