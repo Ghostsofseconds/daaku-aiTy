@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = "5109f31c6a904a99b9a6b755d19394e5";
+const OPENAI_API_KEY = "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";
 
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
