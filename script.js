@@ -7,25 +7,27 @@ function speak(text) {
 }
 
 function search() {
-  const query = document.getElementById("userQuery").value;
+  const query = document.getElementById("userQuery").value.trim();
+  if (!query) return;
+
   document.getElementById("response").innerText = "Searching...";
   speak("Searching for " + query);
 
-  fetch("https://api.openai.com/v1/completions", {
+  fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "text-davinci-003",
-      prompt: query,
-      max_tokens: 100,
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: query }],
+      max_tokens: 150,
     }),
   })
     .then((res) => res.json())
     .then((data) => {
-      const result = data.choices[0].text.trim();
+      const result = data.choices?.[0]?.message?.content || "Kuch response nahi mila.";
       document.getElementById("response").innerText = result;
       speak("Yeh raha aapka result");
     })
